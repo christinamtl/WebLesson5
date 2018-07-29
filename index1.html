@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="todo">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ToDoList</title>
+    <link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.1.1/css/bootstrap.css">
+    <style>
+        #content{
+            width: 400px;
+            margin: 5px auto;
+            background-color:#f5f5f5;
+            border: 1px solid #eee;
+            border-radius:4px;
+            padding: 15px;
+        }
+        ul{
+            list-style: none;
+            padding: 0;
+            margin: 0 0 10px 0;
+        }
+        .done-true{
+            text-decoration: line-through;
+            color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content">
+        <h2>List of thesr tasks</h2>
+        <div ng-controller="todoListCtrl">
+            <span>Total of these tasks {{todos.length}}:still have :{{remaining()}} no finished</span>&nbsp;&nbsp;[
+            <a href="" ng-click="archive()">finish</a>]
+            <ul>
+                <li ng-repeat="todo in todos">
+                    <input type="checkbox" ng-model='todo.done'>
+                    <span class="done-{{todo.done}}" ng-bind="todo.text"></span>
+                </li>
+            </ul>
+
+            <form ng-submit="addTodo()" class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <input type="text" ng-model='todoText' placeholder="Enter new task" class="form-control">
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="btn btn-primary">ADD</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+    <script src="http://apps.bdimg.com/libs/angular.js/1.2.9/angular.min.js"></script>
+    <script>
+        var todo = angular.module('todo', []);
+        todo.controller('todoListCtrl', ['$scope', function($scope){
+            $scope.todos = [
+                {text:'Shopping',done:true},
+                {text:'Swimming',done:false},
+                {text:'Jogging',done:false}
+            ];
+            $scope.remaining = function(){
+                var count = 0;
+                $scope.todos.forEach(function(ele){
+                    count += ele.done ? 0 : 1;
+                });
+                return count;
+            }
+            $scope.addTodo = function(){
+                $scope.todos.push(
+                    {text:$scope.todoText,done:false}
+                );
+                $scope.todoText = '';
+            }
+            $scope.archive = function(){
+                $scope.todos = $scope.todos.filter(function(ele){
+                    return !ele.done;
+                });
+            }
+        }]);
+    </script>
+</html>
